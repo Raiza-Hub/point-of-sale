@@ -70,6 +70,7 @@ export function constructMetadata({
       creator: '@wisdom_adebola',
     },
     icons,
+    metadataBase: new URL('https://digitalhippo.up.railway.app'),
     ...(noIndex && {
       robots: {
         index: false,
