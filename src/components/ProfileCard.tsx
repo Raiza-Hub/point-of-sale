@@ -25,7 +25,8 @@ const ProfileCard = ({
                 src={imageUrl}
                 width={250}
                 height={250}
-                alt="Podcaster"
+                alt="profile picture"
+                loading="eager"
                 className="aspect-square rounded-lg"
             />
             <div className="flex flex-col justify-center max-md:items-center">
