@@ -37,8 +37,8 @@ import { useUser } from "@clerk/nextjs";
 
 import { Id } from "../../../convex/_generated/dataModel"
 import { useMutation } from "convex/react"
+import { fetchMutation } from "convex/nextjs"
 import { api } from "../../../convex/_generated/api"
-import { useUploadFiles } from '@xixixao/uploadstuff/react';
 
 
 
@@ -80,14 +80,13 @@ const Page = () => {
 
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [foodCategory, setFoodCategory] = useState<string>('');
+    const [isUploading, setIsUploading] = useState(false)
+
 
     const [imageStorageId, setImageStorageId] = useState<Id<"_storage"> | null>(null);
     const [imageUrl, setImageUrl] = useState('');
-    const [isImageLoading, setIsImageLoading] = useState<boolean>(false);
     const imageRef = useRef<HTMLInputElement>(null);
 
-    const generateUploadUrl = useMutation(api.files.generateUploadUrl);
-    const { startUpload } = useUploadFiles(generateUploadUrl);
     const getImageUrl = useMutation(api.product.getUrl);
     const createProduct = useMutation(api.product.createProduct);
 
@@ -111,48 +110,87 @@ const Page = () => {
         return redirect("/sign-in");
     }
 
-    const handleImage = async (blob: Blob, fileName: string) => {
-        setIsImageLoading(true)
-        setImageUrl('')
+    // const handleImage = async (blob: Blob, fileName: string) => {
+    //     setIsImageLoading(true)
+    //     setImageUrl('')
+
+    //     try {
+    //         const file = new File([blob], fileName, { type: 'image/*' });
+
+    //         const uploaded = await startUpload([file]);
+
+    //         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //         const storageId = (uploaded[0].response as any).storageId;
+
+    //         setImageStorageId(storageId);
+
+    //         const imageUrl = await getImageUrl({ storageId });
+    //         setImageUrl(imageUrl!);
+    //         setIsImageLoading(false);
+    //         toast({
+    //             title: "Thumbnail uploadeed successfully",
+    //         })
+
+    //     } catch (error) {
+    //         console.log(error)
+    //         toast({ title: 'Error generating thumbnail', variant: 'destructive' })
+    //     }
+    // }
+
+
+    // const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     e.preventDefault();
+
+    //     try {
+    //         const files = e.target.files;
+    //         if (!files) return;
+    //         const file = files[0];
+    //         const blob = await file.arrayBuffer()
+    //             .then((ab) => new Blob([ab]));
+
+    //         handleImage(blob, file.name);
+    //     } catch (error) {
+    //         console.log(error)
+    //         toast({ title: 'Error uploading image', variant: 'destructive' })
+    //     }
+    // }
+
+
+    const handleImageUplaod = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return;
 
         try {
-            const file = new File([blob], fileName, { type: 'image/*' });
+            setIsUploading(true)
 
-            const uploaded = await startUpload([file]);
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const storageId = (uploaded[0].response as any).storageId;
-
-            setImageStorageId(storageId);
-
-            const imageUrl = await getImageUrl({ storageId });
-            setImageUrl(imageUrl!);
-            setIsImageLoading(false);
-            toast({
-                title: "Thumbnail uploadeed successfully",
+            const postUrl = await fetchMutation(api.files.generateUploadUrl)
+            const result = await fetch(postUrl, {
+                method: "POST",
+                headers: { "Content-Type": file.type },
+                body: file
             })
 
+            if (!result.ok) {
+                throw new Error(`Upload failed: ${result.statusText}`)
+            }
+
+            const { storageId } = await result.json()
+
+            const imageUrl = await getImageUrl({ storageId });
+
+            if (imageUrl) {
+                setImageStorageId(storageId)
+                setImageUrl(imageUrl!);
+                toast({
+                    title: "Thumbnail uploadeed successfully",
+                })
+            }
+
         } catch (error) {
-            console.log(error)
-            toast({ title: 'Error generating thumbnail', variant: 'destructive' })
-        }
-    }
-
-
-    const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-
-        try {
-            const files = e.target.files;
-            if (!files) return;
-            const file = files[0];
-            const blob = await file.arrayBuffer()
-                .then((ab) => new Blob([ab]));
-
-            handleImage(blob, file.name);
-        } catch (error) {
-            console.log(error)
-            toast({ title: 'Error uploading image', variant: 'destructive' })
+            console.log("Upload failed:", error);
+            toast({ title: 'Failed to upload image. Please try again.', variant: 'destructive' })
+        } finally {
+            setIsUploading(false);
         }
     }
 
@@ -174,7 +212,7 @@ const Page = () => {
                 price: parseFloat(values.price),
                 nutrition: values.nutrition,
                 imageUrl,
-                imageStorageId: imageStorageId!,
+                imageStorageId: imageStorageId!
             });
             toast({ title: 'Product created' })
             setIsSubmitting(false);
@@ -402,9 +440,15 @@ const Page = () => {
                             type="file"
                             className="hidden"
                             ref={imageRef}
-                            onChange={(e) => uploadImage(e)}
+                            onChange={handleImageUplaod}
+                            disabled={isUploading}
                         />
-                        {!isImageLoading ? (
+                        {isUploading ? (
+                            <div className="flex items-center">
+                                <SpinnerGap className="w-5 h-5 animate-spin mr-2" />
+                                Uploading
+                            </div>
+                        ) : (
                             <Image
                                 src="/upload-image.svg"
                                 alt="upload"
@@ -412,11 +456,6 @@ const Page = () => {
                                 height={40}
 
                             />
-                        ) : (
-                            <div className="flex items-center">
-                                <SpinnerGap className="w-5 h-5 animate-spin mr-2" />
-                                Uploading
-                            </div>
                         )}
                         <div className="flex flex-col items-center">
                             <h2 className="font-bold text-primary">
@@ -440,7 +479,7 @@ const Page = () => {
 
                     <div className="w-full mt-1o">
                         <Button
-                            className="w-full py-4 font-extrabold text-white transition-all duration-500"
+                            className="w-full py-4 mb-6 font-extrabold text-white transition-all duration-500"
                             type="submit"
                             disabled={isSubmitting}
                         >

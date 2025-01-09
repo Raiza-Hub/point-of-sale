@@ -8,7 +8,7 @@ export default defineSchema({
         description: v.string(),
         price: v.number(),
         category: v.string(),
-        imageUrl: v.string(),
+        imageUrl: v.optional(v.string()),
         imageStorageId: v.id('_storage'),
         nutrition: v.optional(
             v.object({
