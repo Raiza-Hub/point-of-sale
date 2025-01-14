@@ -110,52 +110,6 @@ const Page = () => {
         return redirect("/sign-in");
     }
 
-    // const handleImage = async (blob: Blob, fileName: string) => {
-    //     setIsImageLoading(true)
-    //     setImageUrl('')
-
-    //     try {
-    //         const file = new File([blob], fileName, { type: 'image/*' });
-
-    //         const uploaded = await startUpload([file]);
-
-    //         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //         const storageId = (uploaded[0].response as any).storageId;
-
-    //         setImageStorageId(storageId);
-
-    //         const imageUrl = await getImageUrl({ storageId });
-    //         setImageUrl(imageUrl!);
-    //         setIsImageLoading(false);
-    //         toast({
-    //             title: "Thumbnail uploadeed successfully",
-    //         })
-
-    //     } catch (error) {
-    //         console.log(error)
-    //         toast({ title: 'Error generating thumbnail', variant: 'destructive' })
-    //     }
-    // }
-
-
-    // const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     e.preventDefault();
-
-    //     try {
-    //         const files = e.target.files;
-    //         if (!files) return;
-    //         const file = files[0];
-    //         const blob = await file.arrayBuffer()
-    //             .then((ab) => new Blob([ab]));
-
-    //         handleImage(blob, file.name);
-    //     } catch (error) {
-    //         console.log(error)
-    //         toast({ title: 'Error uploading image', variant: 'destructive' })
-    //     }
-    // }
-
-
     const handleImageUplaod = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (!file) return;
@@ -230,10 +184,10 @@ const Page = () => {
 
 
     return (
-        <div className="w-[486px] flex flex-col mx-auto mt-10">
+        <div className="max-w-xl flex flex-col mx-auto mt-10 px-6">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <div className="flex flex-col gap-6">
+                    <div className=" flex flex-col gap-6">
                         <FormField
                             control={form.control}
                             name="name"
@@ -461,7 +415,7 @@ const Page = () => {
                             <h2 className="font-bold text-primary">
                                 Click to upload
                             </h2>
-                            <p className="text-sm font-normal">SVG, PNG, JPG, or GIF (max. 1080x1080px)</p>
+                            <p className="text-sm text-gray-500 text-center">SVG, PNG, JPG, or GIF (max. 1080x1080px)</p>
                         </div>
 
                     </div>

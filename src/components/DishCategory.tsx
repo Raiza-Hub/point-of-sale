@@ -105,7 +105,7 @@ export function Categories() {
             opts={{
                 align: "start",
             }}
-            className="w-full max-w-xs sm:max-w-sm md:max-w-7xl cursor-grabbing"
+            className="w-full md:max-w-7xl cursor-grabbing"
             onMouseEnter={plugin.current.stop}
             onMouseLeave={plugin.current.reset}
         >

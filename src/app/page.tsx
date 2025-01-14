@@ -73,7 +73,7 @@ export default function Home() {
 
 
   return (
-    <div className="max-w-2xl lg:max-w-7xl flex flex-col justify-center px-2 mx-auto">
+    <div className="w-full lg:max-w-7xl flex flex-col justify-center mx-auto px-6 lg:px-8">
       <main className="flex flex-col gap-4">
         <Navbar />
         <div className=" flex justify-center">
