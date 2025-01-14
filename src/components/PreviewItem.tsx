@@ -14,7 +14,7 @@ const PreviewItem = ({ name, price, image, category }: MenuItemProps) => {
     const styles = categoryStyles[category];
 
     return (
-        <div className="flex flex-col gap-1 w-full lg:w-60  p-2 bg-white rounded-lg">
+        <div className="flex flex-col gap-1 w-full  p-2 bg-white rounded-lg">
             <div className="relative flex justify-center items-center bg-[#f7f7f7] p-4 rounded-md">
                 <Image
                     src={image}
