@@ -88,7 +88,7 @@ export default function Home() {
             <ProductSkeleton />
           ) : results?.length > 0 ? (
             <>
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {results.map(({ _id, name, imageUrl, description, category, price, nutrition }) => (
                   <Dialog
                     key={_id}

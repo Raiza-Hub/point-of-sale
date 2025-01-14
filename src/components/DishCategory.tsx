@@ -114,7 +114,7 @@ export function Categories() {
                     <CarouselItem
                         key={index}
                         onClick={() => categoryClicked(category.title)}
-                        className="md:basis-1/3 lg:basis-1/5 cursor-pointer">
+                        className="sm:basis-1/2 md:basis-1/3 lg:basis-1/5 cursor-pointer">
                         <div className="flex flex-col p-1 group select-none">
                             <Card
                                 className={`p-4 ${selectedCategory === category.title

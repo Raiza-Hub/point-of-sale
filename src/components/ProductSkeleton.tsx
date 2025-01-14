@@ -1,7 +1,7 @@
 export default function ProductSkeleton() {
     return (
         <div className="w-full max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {Array.from({ length: 8 }).map((_, index) => (
                     <div key={index} className=" space-y-2">
                         <div className="relative w-full h-32 animate-pulse overflow-hidden rounded-lg bg-gray-200">
