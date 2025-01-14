@@ -157,7 +157,7 @@ const Page = () => {
                     <EmptyState
                         title="You have not created any products yet"
                         buttonLink="/create-item"
-                        buttonText="Create Podcast"
+                        buttonText="Create Product"
                     />
                 )}
 
