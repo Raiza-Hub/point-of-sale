@@ -70,7 +70,7 @@ export function constructMetadata({
       creator: '@wisdom_adebola',
     },
     icons,
-    metadataBase: new URL('https://digitalhippo.up.railway.app'),
+    metadataBase: new URL('https://novoski.vercel.app'),
     ...(noIndex && {
       robots: {
         index: false,
